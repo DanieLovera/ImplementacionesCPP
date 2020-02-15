@@ -1,0 +1,205 @@
+template <typename T> 
+void Arbol <T> :: eliminar (const T &dato) {
+	
+	if (!esta_vacio ()){
+		eliminar (dato, raiz);
+	}
+}
+
+template <typename T>
+void Arbol <T> :: eliminar (const T &dato, NodoBinario *&raiz) {
+
+	//if (raiz == nullptr) {
+		
+	//	return;
+	
+	//} else 
+	if (raiz -> dato < dato) {
+
+		eliminar (dato, raiz -> hijo_izquierdo);
+	
+	} else if (dato < raiz -> dato) {
+
+		eliminar (dato, raiz -> hijo_derecho);
+	
+	} else {
+
+		if (raiz -> hijo_izquierdo != nullptr && raiz -> hijo_derecho != nullptr) {
+	
+			eliminar_minimo(raiz -> dato, raiz);
+	
+		} else {
+
+			NodoBinario* nodo_eliminar = raiz;
+
+			if (raiz -> hijo_izquierdo != nullptr) {
+				raiz = raiz -> hijo_izquierdo;
+			
+			} else {
+				raiz = raiz -> hijo_derecho;
+			}
+			delete nodo_eliminar;
+		}
+	}
+
+}
+
+template <typename T>
+void Arbol <T> :: eliminar_minimo (T &dato, NodoBinario *&raiz) {
+	
+	if (esta_vacio ()) {
+
+		return;
+	}
+
+	else if (raiz -> hijo_izquierdo != nullptr) {
+		
+		eliminar_minimo (dato, raiz -> hijo_izquierdo);
+
+	} else {
+
+		NodoBinario* nodo_eliminar = raiz;
+		dato = raiz -> dato;
+		raiz = nodo_eliminar -> hijo_derecho;
+		delete nodo_eliminar;
+	}
+
+}
+
+// EXTRA DE ENCONTRAR MINIMO 
+
+	/*if (esta_vacio ()) {
+		return nullptr;
+	
+	} else if (raiz -> hijo_izquierdo != nullptr) {
+		return encontrar_minimo (raiz -> hijo_izquierdo);
+	
+	} 
+	return raiz;*/
+
+
+template <typename T>
+void Arbol <T> :: vaciar_arbol (NodoBinario *&raiz) {
+
+	if (raiz != nullptr) {
+
+		//while (raiz != nullptr)
+		//eliminar (raiz -> dato);
+
+		vaciar_arbol (raiz -> hijo_izquierdo);
+		vaciar_arbol (raiz -> hijo_derecho);
+		delete raiz;
+	}
+	raiz = nullptr;
+}
+
+template <typename T> 
+bool Arbol <T> :: arbol_lleno () const {
+	
+	return arbol_lleno (raiz);
+}
+
+template <typename T> 
+bool Arbol <T> :: arbol_lleno (NodoBinario *raiz) const {
+
+	if (raiz != nullptr) {
+
+		if (altura (raiz -> hijo_izquierdo) != altura (raiz -> hijo_derecho)) {
+			
+			return false;
+		
+		} else {
+
+			return (arbol_lleno (raiz -> hijo_izquierdo) && arbol_lleno (raiz -> hijo_derecho));
+		}
+	}
+	return true;
+
+}
+
+template <typename T>
+int Arbol <T> :: peso () const {
+
+	return peso (raiz);
+}
+
+template <typename T>
+int Arbol <T> :: peso (NodoBinario *raiz) const {
+
+	if (raiz != nullptr) {
+
+		if (es_nodo_hoja (raiz)) {
+
+			return PESO_NODO_HOJA;
+		
+		} else {
+
+			int peso_sub_izquierdo = peso (raiz -> hijo_izquierdo);
+			int peso_sub_derecho = peso (raiz -> hijo_derecho);
+
+			int peso = peso_sub_izquierdo + peso_sub_derecho;
+
+			return peso;
+
+		}
+	}
+	return PESO_NODO_NULL;
+}
+
+template <typename T>
+bool Arbol <T> ::es_nodo_hoja (NodoBinario *raiz) const {
+
+	return raiz -> hijo_izquierdo == nullptr && raiz -> hijo_derecho == nullptr ? true : false;
+}
+
+template <typename T>
+int Arbol <T> :: peso () const {
+
+	return peso (raiz);
+}
+
+template <typename T>
+int Arbol <T> :: peso (NodoBinario *raiz) const {
+
+	if (raiz != nullptr) {
+
+		if (es_nodo_hoja (raiz)) {
+
+			return PESO_NODO_HOJA;
+		
+		} else {
+
+			int peso_sub_izquierdo = peso (raiz -> hijo_izquierdo);
+			int peso_sub_derecho = peso (raiz -> hijo_derecho);
+
+			return (peso_sub_izquierdo + peso_sub_derecho) + 1;
+
+		}
+	}
+	return PESO_NODO_NULL;
+}
+
+/*template <typename T> 
+bool Arbol <T> :: arbol_completo () const {
+	
+	return arbol_completo (raiz);
+}
+
+template <typename T> 
+bool Arbol <T> :: arbol_completo (NodoBinario *raiz) const {
+
+	if (raiz != nullptr) {
+
+		int diferencia_altura = altura (raiz -> hijo_izquierdo) - altura (raiz -> hijo_derecho);
+
+		if (diferencia_altura > 1 || diferencia_altura < 0) {
+			
+			return false;
+		
+		} else {
+
+			return (arbol_completo (raiz -> hijo_izquierdo) && arbol_completo (raiz -> hijo_derecho));
+		}
+	}
+	return true;
+}*/
